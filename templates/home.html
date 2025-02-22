@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Medical Test Analyzer</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <body>
   <h1>Medical Test Analyzer</h1>
@@ -16,12 +18,12 @@
         <option value="ct">CT Scan</option>
       </select>
     </div>
-    <br>
-    <div>
+
+    <div class="file-upload-container">
       <label for="file_upload">Upload Image (PNG or JPEG only):</label>
       <input type="file" id="file_upload" name="file_upload" accept="image/png, image/jpeg" required>
     </div>
-    <br>
+
     <div>
       <button type="submit">Analyze</button>
     </div>
