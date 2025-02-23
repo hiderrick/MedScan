@@ -8,7 +8,7 @@ def index():
 
 @app.route('/')
 def home_page():
-    return render_template('home.html')
+    return render_template('home.html') # Nice!!!
 
 if __name__ == '__main__':
     app.run(degub=True)
