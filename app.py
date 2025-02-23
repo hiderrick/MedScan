@@ -39,7 +39,6 @@ def build_prompt(history):
 
 @app.route("/")
 def home():
-    session.pop('chat_history', None)  # Clear chat history on page refresh
     return render_template("home.html")
 
 @app.route('/chat', methods=['POST'])
@@ -49,26 +48,13 @@ def chat():
     if not user_input:
         return jsonify({'error': 'No message provided'}), 400
 
-    # Retrieve chat history from session
-    chat_history = session.get('chat_history', [])
-
-    # Add user input to chat history
-    chat_history.append({'role': 'user', 'message': user_input})
-
     # Build the prompt
-    prompt = build_prompt(chat_history)
+    prompt = f"{user_input}\n{assistant_text}"
 
     # Generate a response using the Llama model
-    response = llm(prompt, max_tokens=150)
-    assistant_response = response['choices'][0]['text']
+    response = llm(prompt, max_tokens=150, repeat_penalty=10)
 
-    # Add assistant response to chat history
-    chat_history.append({'role': 'assistant', 'message': assistant_response})
-
-    # Save updated chat history to session
-    session['chat_history'] = chat_history
-
-    return jsonify({'response': assistant_response})
+    return jsonify({'response': response['choices'][0]['text']})
 
 
 @app.route("/chatbox")
