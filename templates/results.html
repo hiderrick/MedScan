@@ -4,6 +4,16 @@
   <meta charset="UTF-8" />
   <title>Diagnosis Results</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+  <style>
+    .high-value {
+      color: green;
+      font-weight: bold;
+    }
+    .low-value {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -19,7 +29,12 @@
       <h3>Diagnosis:</h3>
       <ul>
         {% for pathology, value in results.items() %}
-          <li><strong>{{ pathology }}:</strong> {{ value }}</li>
+          <li>
+            <strong>{{ pathology }}:</strong> 
+            <span class="{% if value >= 50 %}high-value{% elif value < 50 %}low-value{% endif %}">
+              {{ "%.2f"|format(value) }}%
+            </span>
+          </li>
         {% endfor %}
       </ul>
     {% else %}
