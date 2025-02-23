@@ -7,12 +7,12 @@ import torchxrayvision as xrv
 import skimage
 import torch
 import torchvision
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from llama_cpp import Llama
 
 
-model_name = "mradermacher/BioInstructQA-SmolLM-135M-Instruct-GGUF"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(model_name)
+model_path = './models/'
+model_name = 'Qwen2-1.5b-it-bioinstruct.Q8_0.gguf'
+model_path = model_path + model_name
 assistant_text = "assistant that replies in short key points only."
 chat_history = []
 
@@ -43,39 +43,15 @@ def home():
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    global chat_history
-    chat_history = []
-    data = request.get_json()
-    user_message = data.get("message", "")
-    
-    # Add user message to the history
-    chat_history.append({"role": "user", "message": user_message})
-    
-    # Create a prompt using the conversation history
-    prompt = build_prompt(chat_history)
-    
-    # Tokenize input
-    inputs = tokenizer(prompt, return_tensors="pt")
-    
-    # Generate response (parameters can be tuned for your needs)
-    outputs = model.generate(
-        **inputs, 
-        max_length=512, 
-        do_sample=True, 
-        top_p=0.9, 
-        temperature=0.8,
-        pad_token_id=tokenizer.eos_token_id  # to avoid warnings if no pad token is set
-    )
-    
-    # Decode generated tokens
-    generated_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    # Extract the assistant response (everything after the prompt)
-    response = generated_text[len(prompt):].strip()
-    
-    # Append assistant response to history
-    chat_history.append({"role": assistant_text, "message": response})
-    
-    return jsonify({"response": response, "chat_history": chat_history})
+    llm = Llama(model_path=model_path)
+    user_input = request.json.get('message')
+    if not user_input:
+        return jsonify({'error': 'No message provided'}), 400
+
+    # Generate a response using the Llama model
+    response = llm(user_input, max_tokens=150)
+    return jsonify({'response': response['choices'][0]['text']})
+
 
 @app.route("/chatbox")
 def chatbox():
