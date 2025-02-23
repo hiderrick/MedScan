@@ -12,6 +12,7 @@ from llama_cpp import Llama
 
 model_path = './models/'
 model_name = 'Qwen2-1.5b-it-bioinstruct.Q8_0.gguf'
+# download from https://huggingface.co/RichardErkhov/ehristoforu_-_Qwen2-1.5b-it-bioinstruct-gguf/resolve/main/Qwen2-1.5b-it-bioinstruct.Q8_0.gguf?download=true
 model_path = model_path + model_name
 assistant_text = "assistant that replies in short key points only."
 chat_history = []
