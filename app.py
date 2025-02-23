@@ -7,7 +7,14 @@ import torchxrayvision as xrv
 import skimage
 import torch
 import torchvision
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
+
+model_name = "mradermacher/BioInstructQA-SmolLM-135M-Instruct-GGUF"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(model_name)
+assistant_text = "assistant that replies in short key points only."
+chat_history = []
 
 app = Flask(__name__)
 app.secret_key = "some_secret_key"
@@ -19,10 +26,56 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
+def build_prompt(history):
+    """
+    Build a prompt from the chat history.
+    Format: each turn is prefixed with the speaker, and the prompt ends expecting the assistant's answer.
+    """
+    prompt = ""
+    for turn in history:
+        prompt += f"{turn['role']}: {turn['message']}\n"
+    prompt += assistant_text + ": "
+    return prompt
+
 @app.route("/")
 def home():
     return render_template("home.html")
 
+@app.route('/chat', methods=['POST'])
+def chat():
+    global chat_history
+    chat_history = []
+    data = request.get_json()
+    user_message = data.get("message", "")
+    
+    # Add user message to the history
+    chat_history.append({"role": "user", "message": user_message})
+    
+    # Create a prompt using the conversation history
+    prompt = build_prompt(chat_history)
+    
+    # Tokenize input
+    inputs = tokenizer(prompt, return_tensors="pt")
+    
+    # Generate response (parameters can be tuned for your needs)
+    outputs = model.generate(
+        **inputs, 
+        max_length=512, 
+        do_sample=True, 
+        top_p=0.9, 
+        temperature=0.8,
+        pad_token_id=tokenizer.eos_token_id  # to avoid warnings if no pad token is set
+    )
+    
+    # Decode generated tokens
+    generated_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    # Extract the assistant response (everything after the prompt)
+    response = generated_text[len(prompt):].strip()
+    
+    # Append assistant response to history
+    chat_history.append({"role": assistant_text, "message": response})
+    
+    return jsonify({"response": response, "chat_history": chat_history})
 
 @app.route("/chatbox")
 def chatbox():
