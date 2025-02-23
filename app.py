@@ -52,7 +52,7 @@ def chat():
     prompt = f"{user_input}\n{assistant_text}"
 
     # Generate a response using the Llama model
-    response = llm(prompt, max_tokens=150)
+    response = llm(prompt, max_tokens=150, repeat_penalty=10)
 
     return jsonify({'response': response['choices'][0]['text']})
 
