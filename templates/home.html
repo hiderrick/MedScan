@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <body>
-  <h1>Medical Test Analyzer</h1>
+  <h1>MedScan</h1>
   <form action="/upload" method="post" enctype="multipart/form-data">
     <div>
       <label for="test_type">Select Test Type:</label>
@@ -27,6 +27,11 @@
     <div>
       <button type="submit">Analyze</button>
     </div>
+
+      <div class="logo-container">
+      <img src="{{ url_for('static', filename='daily-health-app.png') }}" alt="Medical Logo">
+      </div>
+
   </form>
 </body>
 </html>
