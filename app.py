@@ -7,11 +7,31 @@ import skimage
 import torch
 import torchvision
 from llama_cpp import Llama
+import requests
+from tqdm import tqdm
 
 
 model_path = './models/'
 model_name = 'Qwen2-1.5b-it-bioinstruct.Q8_0.gguf'
-# download from https://huggingface.co/RichardErkhov/ehristoforu_-_Qwen2-1.5b-it-bioinstruct-gguf/resolve/main/Qwen2-1.5b-it-bioinstruct.Q8_0.gguf?download=true
+# Check if the model directory exists, if not, create it
+if not os.path.exists(model_path):
+    os.makedirs(model_path)
+
+# Check if the model file exists, if not, download it
+model_file_path = os.path.join(model_path, model_name)
+if not os.path.exists(model_file_path):
+    url = "https://huggingface.co/RichardErkhov/ehristoforu_-_Qwen2-1.5b-it-bioinstruct-gguf/resolve/main/Qwen2-1.5b-it-bioinstruct.Q8_0.gguf?download=true"
+    response = requests.get(url, stream=True)
+    total_size = int(response.headers.get('content-length', 0))
+    block_size = 1024  # 1 Kibibyte
+    t = tqdm(total=total_size, unit='iB', unit_scale=True)
+    with open(model_file_path, 'wb') as file:
+        for data in response.iter_content(block_size):
+            t.update(len(data))
+            file.write(data)
+    t.close()
+    if total_size != 0 and t.n != total_size:
+        print("ERROR, something went wrong")
 model_path = model_path + model_name
 assistant_text = "Reply in short key points only."
 chat_history = []
