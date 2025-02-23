@@ -2,20 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Doctor GPT Chatbox</title>
-
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <body>
+  <div class="logo-container">
+    <img src="{{ url_for('static', filename='daily-health-app.png') }}" alt="Logo">
+  </div>
+
+  <h1>Doctor GPT Chatbox</h1>
+
   <div class="chat-container">
-    <h1>Doctor GPT Chatbox</h1>
     <div id="chatBox" class="chat-box"></div>
 
-    <div class="input-box">
+    <div class="input-container">
+      <label for="question">Ask Doctor GPT:</label>
       <input type="text" id="question" placeholder="Type your question here..." />
-      <button onclick="askQuestion()">Ask</button>
     </div>
-    <div style="margin-top: 10px;">
-      <button onclick="resetChat()">Reset Chat</button>
+
+    <div class="chat-buttons">
+      <button onclick="askQuestion()">Ask</button>
+      <button onclick="resetChat()">Reset</button>
     </div>
   </div>
 
@@ -39,7 +47,7 @@
         const response = await fetch("/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: question }),  // Updated key to 'message'
+          body: JSON.stringify({ message: question }),
         });
 
         if (!response.ok) {
@@ -48,7 +56,7 @@
 
         const data = await response.json();
 
-        if (data.response) {  // Updated key to 'response'
+        if (data.response) {
           const botMsg = document.createElement("div");
           botMsg.className = "message bot-message";
           botMsg.textContent = `Doctor GPT: ${data.response}`;
