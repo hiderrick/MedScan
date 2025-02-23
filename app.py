@@ -13,7 +13,7 @@ model_path = './models/'
 model_name = 'Qwen2-1.5b-it-bioinstruct.Q8_0.gguf'
 # download from https://huggingface.co/RichardErkhov/ehristoforu_-_Qwen2-1.5b-it-bioinstruct-gguf/resolve/main/Qwen2-1.5b-it-bioinstruct.Q8_0.gguf?download=true
 model_path = model_path + model_name
-assistant_text = "assistant that replies in short key points only."
+assistant_text = "Reply in short key points only."
 chat_history = []
 
 app = Flask(__name__)
@@ -48,8 +48,12 @@ def chat():
     if not user_input:
         return jsonify({'error': 'No message provided'}), 400
 
+    # Build the prompt
+    prompt = f"{user_input}\n{assistant_text}"
+
     # Generate a response using the Llama model
-    response = llm(user_input, max_tokens=150)
+    response = llm(prompt, max_tokens=150)
+
     return jsonify({'response': response['choices'][0]['text']})
 
 
