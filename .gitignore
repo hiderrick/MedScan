@@ -19,3 +19,4 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+models/Qwen2-1.5b-it-bioinstruct.Q8_0.gguf

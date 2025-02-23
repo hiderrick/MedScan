@@ -36,10 +36,10 @@
 
       // Send question to Flask endpoint
       try {
-        const response = await fetch("/ask", {
+        const response = await fetch("/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ question: question }),
+          body: JSON.stringify({ message: question }),  // Updated key to 'message'
         });
 
         if (!response.ok) {
@@ -48,10 +48,10 @@
 
         const data = await response.json();
 
-        if (data.answer) {
+        if (data.response) {  // Updated key to 'response'
           const botMsg = document.createElement("div");
           botMsg.className = "message bot-message";
-          botMsg.textContent = `Doctor GPT: ${data.answer}`;
+          botMsg.textContent = `Doctor GPT: ${data.response}`;
           chatBox.appendChild(botMsg);
         } else {
           const botMsg = document.createElement("div");
