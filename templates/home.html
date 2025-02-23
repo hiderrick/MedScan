@@ -1,37 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Medical Test Analyzer</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <body>
-  <h1>MedScan</h1>
-  <form action="/upload" method="post" enctype="multipart/form-data">
-    <div>
-      <label for="test_type">Select Test Type:</label>
-      <select name="test_type" id="test_type" required>
-        <option value="">--Please choose an option--</option>
-        <option value="xray">X-Ray</option>
-        <option value="mri">MRI</option>
-        <option value="ct">CT Scan</option>
-      </select>
-    </div>
 
-    <div class="file-upload-container">
-      <label for="file_upload">Upload Image (PNG or JPEG only):</label>
-      <input type="file" id="file_upload" name="file_upload" accept="image/png, image/jpeg" required>
-    </div>
+    <header>
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='daily-health-app.png') }}" alt="Logo">
+        </div>
+        <h1>MedScan</h1>
+    </header>
 
-    <div>
-      <button type="submit">Analyze</button>
-    </div>
+    <main>
+        <!-- Image Upload Form -->
+        <h2>Upload X-Ray/MRI Image for Diagnosis</h2>
+        <form action="{{ url_for('upload_file') }}" method="POST" enctype="multipart/form-data">
+            <div class="file-upload-container">
+                <label for="xray_image">Upload X-Ray/MRI Image:</label>
+                <input type="file" id="xray_image" name="xray_image" accept="image/*" required>
+            </div>
+            <button type="submit">Upload & Diagnose</button>
+        </form>
 
-      <div class="logo-container">
-      <img src="{{ url_for('static', filename='daily-health-app.png') }}" alt="Medical Logo">
-      </div>
+        <hr>
 
-  </form>
+        <!-- Chatbox Section -->
+        <h2>Ask AI</h2>
+        <a href="{{ url_for('chatbox') }}">
+            <button>chat</button>
+        </a>
+    </main>
+
 </body>
 </html>

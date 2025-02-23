@@ -1,3 +1,4 @@
+/* General Styling */
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f0f8ff;
@@ -9,6 +10,7 @@ body {
     min-height: 100vh;
 }
 
+/* Header Styling */
 h1 {
     color: #0056b3;
     text-align: center;
@@ -17,6 +19,7 @@ h1 {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
+/* Form Container */
 form {
     background-color: white;
     padding: 30px;
@@ -26,6 +29,7 @@ form {
     max-width: 500px;
 }
 
+/* Form Elements */
 div {
     margin-bottom: 20px;
 }
@@ -37,7 +41,8 @@ label {
     font-weight: bold;
 }
 
-select, input[type="file"] {
+select,
+input[type="file"] {
     width: 100%;
     padding: 10px;
     border: 2px solid #e0e0e0;
@@ -45,11 +50,13 @@ select, input[type="file"] {
     font-size: 16px;
 }
 
-select:focus {
+select:focus,
+input[type="file"]:focus {
     border-color: #0056b3;
     outline: none;
 }
 
+/* Button Styling */
 button {
     background-color: #0056b3;
     color: white;
@@ -66,7 +73,7 @@ button:hover {
     background-color: #003d82;
 }
 
-/* Custom styling for file input */
+/* File Upload Styling */
 .file-upload-container {
     width: 100%;
     text-align: center;
@@ -74,9 +81,9 @@ button:hover {
 
 input[type="file"] {
     border: 2px dashed #0056b3;
-    padding: 10px; /* Reduced padding to prevent overflow */
+    padding: 10px;
     background-color: #f8fbff;
-    width: calc(100% - 24px); /* Ensure it fits within the form */
+    width: calc(100% - 24px);
     display: block;
     margin: 0 auto;
 }
@@ -91,6 +98,7 @@ input[type="file"]::-webkit-file-upload-button {
     margin-right: 10px;
 }
 
+/* Logo Styling */
 .logo-container {
     text-align: center;
     margin-bottom: 20px;

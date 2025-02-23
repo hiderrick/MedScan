@@ -1,97 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Medical Test Analyzer</title>
-
-  <!-- Bootstrap 5 (CDN) -->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    integrity="sha384-ENJD0O9GYFuYyIHoyMbIGxvY1UDTrmsEbQz7VX6C8D7jv78kNFEyMMNPf0YOfMuB"
-    crossorigin="anonymous"
-  >
-
-  <!-- Your custom CSS file -->
-  <!-- Make sure your Flask project has static/main.css in the correct folder -->
+  <meta charset="UTF-8" />
+  <title>Diagnosis Results</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
-<body class="bg-primary text-white" style="min-height: 100vh;">
-  <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-    <div class="card shadow" style="width: 100%; max-width: 500px;">
-      <div class="card-body text-dark">
-        <h1 class="card-title text-center mb-4">Medical Test Analyzer</h1>
-        <form action="/upload" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
-          <!-- Test type -->
-          <div class="mb-3">
-            <label for="test_type" class="form-label fw-semibold">Select Test Type</label>
-            <select
-              name="test_type"
-              id="test_type"
-              class="form-select"
-              required
-            >
-              <option value="">-- Please choose an option --</option>
-              <option value="xray">X-Ray</option>
-              <option value="mri">MRI</option>
-              <option value="ct">CT Scan</option>
-            </select>
-            <div class="invalid-feedback">Please select a test type.</div>
-          </div>
+<body>
+  <header>
+    <h1>Diagnosis Results</h1>
+  </header>
+  <main>
+    {% if image_path %}
+      <h3>Uploaded Image:</h3>
+      <img src="{{ url_for('static', filename=image_path.split('static/')[-1]) }}" alt="Uploaded X-ray" style="max-width: 400px;">
+    {% endif %}
 
-          <!-- File upload -->
-          <div class="mb-3">
-            <label for="file_upload" class="form-label fw-semibold">
-              Upload Image (PNG or JPEG only)
-            </label>
-            <input
-              type="file"
-              id="file_upload"
-              name="file_upload"
-              class="form-control"
-              accept="image/png, image/jpeg"
-              required
-            >
-            <div class="invalid-feedback">Please upload an image file (PNG/JPEG).</div>
-          </div>
+    {% if results %}
+      <h3>Diagnosis:</h3>
+      <ul>
+        {% for pathology, value in results.items() %}
+          <li><strong>{{ pathology }}:</strong> {{ value }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No diagnosis available.</p>
+    {% endif %}
 
-          <!-- Submit button -->
-          <div class="text-center">
-            <button
-              type="submit"
-              class="btn btn-primary px-4 py-2 fw-semibold"
-            >
-              Analyze
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- Bootstrap 5 JavaScript (optional; required for some Bootstrap components) -->
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+u+4fHnE5lDQy0rsIbT1NY6L+R9Uj"
-    crossorigin="anonymous"
-  ></script>
-
-  <!-- Optional: Basic client-side form validation -->
-  <script>
-    // Bootstrap form validation script
-    (function () {
-      'use strict'
-      const forms = document.querySelectorAll('.needs-validation')
-      Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
-          if (!form.checkValidity()) {
-            event.preventDefault()
-            event.stopPropagation()
-          }
-          form.classList.add('was-validated')
-        }, false)
-      })
-    })()
-  </script>
+    <a href="{{ url_for('home') }}">Upload Another Image</a>
+  </main>
 </body>
 </html>
