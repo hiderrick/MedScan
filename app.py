@@ -109,7 +109,7 @@ def classify_xray(filename: str) -> dict:
 
     # Convert results to a dictionary {pathology: float_value}
     results = {
-        pathology: float(value)
+        pathology: float(value * 100)
         for pathology, value in zip(model.pathologies, outputs[0].detach().numpy())
     }
     return results
